@@ -55,6 +55,18 @@ class Utility():
         scaler = MinMaxScaler()
         df[columns] = scaler.fit_transform(df[columns])
         return df
+     def normalize_data(self, df, columns):
+        """Normalize data to have a mean of 0 and a standard deviation of 1."""
+        from sklearn.preprocessing import StandardScaler
+        scaler = StandardScaler()
+        df[columns] = scaler.fit_transform(df[columns])
+        return df
+
+     def log_transformation(self, df, column):
+        """Apply log transformation to a column to reduce skewness."""
+        import numpy as np
+        df[column] = np.log1p(df[column])  # log1p to handle log(0) cases
+        return df
 
 
 
@@ -98,6 +110,10 @@ df = util.add_new_feature(df, new_column_name="name_length", calculation=lambda 
 
 
 df = util.feature_scaling(df, columns=["age"])
+df = util.normalize_data(df, columns=["age"])
+
+
+df = util.log_transformation(df, column="age")
 
 print("Processed DataFrame:")
 print(df)
