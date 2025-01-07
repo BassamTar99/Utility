@@ -40,6 +40,22 @@ class Utility():
         elif method == 'mode':
             df[column].fillna(df[column].mode()[0], inplace=True)
         return df
+     def encode_categorical_features(self, df, columns):
+        """Encode categorical features using one-hot encoding."""
+        return pd.get_dummies(df, columns=columns)
+
+     def add_new_feature(self, df, new_column_name, calculation):
+        """Add a new feature to the DataFrame based on a calculation."""
+        df[new_column_name] = calculation(df)
+        return df
+
+     def feature_scaling(self, df, columns):
+        """Scale features to a standard range (e.g., 0 to 1)."""
+        from sklearn.preprocessing import MinMaxScaler
+        scaler = MinMaxScaler()
+        df[columns] = scaler.fit_transform(df[columns])
+        return df
+
 
 
 util = Utility()
@@ -48,7 +64,8 @@ util = Utility()
 data = {
     "Name": [" Alice ", "Bob", None, "Alice"],
     "Age": [25, 30, None, 25],
-    "Date": ["2021-01-01", "2021-01-02", None, "2021-01-01"]
+    "Date": ["2021-01-01", "2021-01-02", None, "2021-01-01"],
+    "Category": ["A", "B", "A", "C"]
 }
 
 df = pd.DataFrame(data)
@@ -73,6 +90,14 @@ df = util.trim_whitespace(df)
 df = util.standardize_column_names(df)
 
 df = util.fill_missing_values(df, column="age", method='mean')
+
+df = util.encode_categorical_features(df, columns=["category"])
+
+
+df = util.add_new_feature(df, new_column_name="name_length", calculation=lambda x: x["name"].str.len())
+
+
+df = util.feature_scaling(df, columns=["age"])
 
 print("Processed DataFrame:")
 print(df)
