@@ -96,6 +96,27 @@ class Utility():
         sns.heatmap(df.isnull(), cbar=False, cmap="viridis")
         plt.title("Missing Data Visualization")
         plt.show()
+     def load_data_from_csv(self, file_path):
+        """Load data from a CSV file."""
+        import pandas as pd
+        return pd.read_csv(file_path)
+
+     def load_data_to_csv(self, df, file_path):
+        """Save the DataFrame to a CSV file."""
+        df.to_csv(file_path, index=False)
+
+     def check_missing_values(self, df):
+        """Check for missing values in the DataFrame."""
+        return df.isnull().sum()
+
+     def check_duplicates(self, df):
+        """Check for duplicate rows in the DataFrame."""
+        return df.duplicated().sum()
+
+     def get_column_data_types(self, df):
+        """Get the data types of each column in the DataFrame."""
+        return df.dtypes
+
 
 
 
@@ -161,5 +182,25 @@ print(util.summary_statistics(df))
 
 util.visualize_missing_data(df)
 
+file_path = "example.csv"
+df = util.load_data_from_csv(file_path)
+
+
+output_path = "output.csv"
+util.load_data_to_csv(df, output_path)
+
+
+missing_values = util.check_missing_values(df)
+print("Missing Values:")
+print(missing_values)
+
+duplicates = util.check_duplicates(df)
+print("Duplicate Rows:")
+print(duplicates)
+
+
+data_types = util.get_column_data_types(df)
+print("Column Data Types:")
+print(data_types)
 print("Processed DataFrame:")
 print(df)
