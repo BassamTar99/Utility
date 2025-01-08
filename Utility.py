@@ -67,6 +67,14 @@ class Utility():
         import numpy as np
         df[column] = np.log1p(df[column])  # log1p to handle log(0) cases
         return df
+     def group_by_aggregation(self, df, group_by_column, agg_column, agg_func):
+        """Group by a column and apply an aggregation function."""
+        return df.groupby(group_by_column)[agg_column].agg(agg_func).reset_index()
+
+     def cumulative_sum(self, df, column):
+        """Compute the cumulative sum of a column."""
+        df[f"{column}_cumsum"] = df[column].cumsum()
+        return df
 
 
 
@@ -114,6 +122,13 @@ df = util.normalize_data(df, columns=["age"])
 
 
 df = util.log_transformation(df, column="age")
+grouped_df = util.group_by_aggregation(df, group_by_column="category", agg_column="age", agg_func="mean")
+print("Grouped DataFrame:")
+print(grouped_df)
 
+
+df = util.cumulative_sum(df, column="age")
+print("DataFrame with Cumulative Sum:")
+print(df)
 print("Processed DataFrame:")
 print(df)
