@@ -75,6 +75,28 @@ class Utility():
         """Compute the cumulative sum of a column."""
         df[f"{column}_cumsum"] = df[column].cumsum()
         return df
+     def plot_histogram(self, df, column):
+        """Plot a histogram of a specified column."""
+        import matplotlib.pyplot as plt
+        plt.hist(df[column].dropna(), bins=20, color='blue', edgecolor='black')
+        plt.title(f"Histogram of {column}")
+        plt.xlabel(column)
+        plt.ylabel("Frequency")
+        plt.show()
+
+     def summary_statistics(self, df):
+        """Generate summary statistics for the DataFrame."""
+        return df.describe()
+
+     def visualize_missing_data(self, df):
+        """Visualize missing data in the DataFrame."""
+        import seaborn as sns
+        import matplotlib.pyplot as plt
+        plt.figure(figsize=(10, 6))
+        sns.heatmap(df.isnull(), cbar=False, cmap="viridis")
+        plt.title("Missing Data Visualization")
+        plt.show()
+
 
 
 
@@ -130,5 +152,14 @@ print(grouped_df)
 df = util.cumulative_sum(df, column="age")
 print("DataFrame with Cumulative Sum:")
 print(df)
+
+
+util.plot_histogram(df, column="age")
+
+print("Summary Statistics:")
+print(util.summary_statistics(df))
+
+util.visualize_missing_data(df)
+
 print("Processed DataFrame:")
 print(df)
