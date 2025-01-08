@@ -41,16 +41,16 @@ class Utility():
             df[column].fillna(df[column].mode()[0], inplace=True)
         return df
      def encode_categorical_features(self, df, columns):
-        """Encode categorical features using one-hot encoding."""
+        
         return pd.get_dummies(df, columns=columns)
 
      def add_new_feature(self, df, new_column_name, calculation):
-        """Add a new feature to the DataFrame based on a calculation."""
+       
         df[new_column_name] = calculation(df)
         return df
 
      def feature_scaling(self, df, columns):
-        """Scale features to a standard range (e.g., 0 to 1)."""
+        
         from sklearn.preprocessing import MinMaxScaler
         scaler = MinMaxScaler()
         df[columns] = scaler.fit_transform(df[columns])
