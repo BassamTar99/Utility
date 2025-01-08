@@ -41,42 +41,34 @@ class Utility():
             df[column].fillna(df[column].mode()[0], inplace=True)
         return df
      def encode_categorical_features(self, df, columns):
-        """Encode categorical features using one-hot encoding."""
         return pd.get_dummies(df, columns=columns)
 
      def add_new_feature(self, df, new_column_name, calculation):
-        """Add a new feature to the DataFrame based on a calculation."""
         df[new_column_name] = calculation(df)
         return df
 
      def feature_scaling(self, df, columns):
-        """Scale features to a standard range (e.g., 0 to 1)."""
         from sklearn.preprocessing import MinMaxScaler
         scaler = MinMaxScaler()
         df[columns] = scaler.fit_transform(df[columns])
         return df
      def normalize_data(self, df, columns):
-        """Normalize data to have a mean of 0 and a standard deviation of 1."""
         from sklearn.preprocessing import StandardScaler
         scaler = StandardScaler()
         df[columns] = scaler.fit_transform(df[columns])
         return df
 
      def log_transformation(self, df, column):
-        """Apply log transformation to a column to reduce skewness."""
         import numpy as np
-        df[column] = np.log1p(df[column])  # log1p to handle log(0) cases
+        df[column] = np.log1p(df[column])  
         return df
      def group_by_aggregation(self, df, group_by_column, agg_column, agg_func):
-        """Group by a column and apply an aggregation function."""
         return df.groupby(group_by_column)[agg_column].agg(agg_func).reset_index()
 
      def cumulative_sum(self, df, column):
-        """Compute the cumulative sum of a column."""
         df[f"{column}_cumsum"] = df[column].cumsum()
         return df
      def plot_histogram(self, df, column):
-        """Plot a histogram of a specified column."""
         import matplotlib.pyplot as plt
         plt.hist(df[column].dropna(), bins=20, color='blue', edgecolor='black')
         plt.title(f"Histogram of {column}")
@@ -85,11 +77,9 @@ class Utility():
         plt.show()
 
      def summary_statistics(self, df):
-        """Generate summary statistics for the DataFrame."""
         return df.describe()
 
      def visualize_missing_data(self, df):
-        """Visualize missing data in the DataFrame."""
         import seaborn as sns
         import matplotlib.pyplot as plt
         plt.figure(figsize=(10, 6))
@@ -97,12 +87,10 @@ class Utility():
         plt.title("Missing Data Visualization")
         plt.show()
      def load_data_from_csv(self, file_path):
-        """Load data from a CSV file."""
         import pandas as pd
         return pd.read_csv(file_path)
 
      def load_data_to_csv(self, df, file_path):
-        """Save the DataFrame to a CSV file."""
         df.to_csv(file_path, index=False)
 
      def check_missing_values(self, df):
@@ -110,11 +98,9 @@ class Utility():
         return df.isnull().sum()
 
      def check_duplicates(self, df):
-        """Check for duplicate rows in the DataFrame."""
         return df.duplicated().sum()
 
      def get_column_data_types(self, df):
-        """Get the data types of each column in the DataFrame."""
         return df.dtypes
 
 
