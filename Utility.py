@@ -40,6 +40,85 @@ class Utility():
         elif method == 'mode':
             df[column].fillna(df[column].mode()[0], inplace=True)
         return df
+     def encode_categorical_features(self, df, columns):
+        """Encode categorical features using one-hot encoding."""
+        return pd.get_dummies(df, columns=columns)
+
+     def add_new_feature(self, df, new_column_name, calculation):
+        """Add a new feature to the DataFrame based on a calculation."""
+        df[new_column_name] = calculation(df)
+        return df
+
+     def feature_scaling(self, df, columns):
+        """Scale features to a standard range (e.g., 0 to 1)."""
+        from sklearn.preprocessing import MinMaxScaler
+        scaler = MinMaxScaler()
+        df[columns] = scaler.fit_transform(df[columns])
+        return df
+     def normalize_data(self, df, columns):
+        """Normalize data to have a mean of 0 and a standard deviation of 1."""
+        from sklearn.preprocessing import StandardScaler
+        scaler = StandardScaler()
+        df[columns] = scaler.fit_transform(df[columns])
+        return df
+
+     def log_transformation(self, df, column):
+        """Apply log transformation to a column to reduce skewness."""
+        import numpy as np
+        df[column] = np.log1p(df[column])  # log1p to handle log(0) cases
+        return df
+     def group_by_aggregation(self, df, group_by_column, agg_column, agg_func):
+        """Group by a column and apply an aggregation function."""
+        return df.groupby(group_by_column)[agg_column].agg(agg_func).reset_index()
+
+     def cumulative_sum(self, df, column):
+        """Compute the cumulative sum of a column."""
+        df[f"{column}_cumsum"] = df[column].cumsum()
+        return df
+     def plot_histogram(self, df, column):
+        """Plot a histogram of a specified column."""
+        import matplotlib.pyplot as plt
+        plt.hist(df[column].dropna(), bins=20, color='blue', edgecolor='black')
+        plt.title(f"Histogram of {column}")
+        plt.xlabel(column)
+        plt.ylabel("Frequency")
+        plt.show()
+
+     def summary_statistics(self, df):
+        """Generate summary statistics for the DataFrame."""
+        return df.describe()
+
+     def visualize_missing_data(self, df):
+        """Visualize missing data in the DataFrame."""
+        import seaborn as sns
+        import matplotlib.pyplot as plt
+        plt.figure(figsize=(10, 6))
+        sns.heatmap(df.isnull(), cbar=False, cmap="viridis")
+        plt.title("Missing Data Visualization")
+        plt.show()
+     def load_data_from_csv(self, file_path):
+        """Load data from a CSV file."""
+        import pandas as pd
+        return pd.read_csv(file_path)
+
+     def load_data_to_csv(self, df, file_path):
+        """Save the DataFrame to a CSV file."""
+        df.to_csv(file_path, index=False)
+
+     def check_missing_values(self, df):
+        """Check for missing values in the DataFrame."""
+        return df.isnull().sum()
+
+     def check_duplicates(self, df):
+        """Check for duplicate rows in the DataFrame."""
+        return df.duplicated().sum()
+
+     def get_column_data_types(self, df):
+        """Get the data types of each column in the DataFrame."""
+        return df.dtypes
+
+
+
 
 
 util = Utility()
@@ -48,7 +127,8 @@ util = Utility()
 data = {
     "Name": [" Alice ", "Bob", None, "Alice"],
     "Age": [25, 30, None, 25],
-    "Date": ["2021-01-01", "2021-01-02", None, "2021-01-01"]
+    "Date": ["2021-01-01", "2021-01-02", None, "2021-01-01"],
+    "Category": ["A", "B", "A", "C"]
 }
 
 df = pd.DataFrame(data)
@@ -74,5 +154,53 @@ df = util.standardize_column_names(df)
 
 df = util.fill_missing_values(df, column="age", method='mean')
 
+df = util.encode_categorical_features(df, columns=["category"])
+
+
+df = util.add_new_feature(df, new_column_name="name_length", calculation=lambda x: x["name"].str.len())
+
+
+df = util.feature_scaling(df, columns=["age"])
+df = util.normalize_data(df, columns=["age"])
+
+
+df = util.log_transformation(df, column="age")
+grouped_df = util.group_by_aggregation(df, group_by_column="category", agg_column="age", agg_func="mean")
+print("Grouped DataFrame:")
+print(grouped_df)
+
+
+df = util.cumulative_sum(df, column="age")
+print("DataFrame with Cumulative Sum:")
+print(df)
+
+
+util.plot_histogram(df, column="age")
+
+print("Summary Statistics:")
+print(util.summary_statistics(df))
+
+util.visualize_missing_data(df)
+
+file_path = "example.csv"
+df = util.load_data_from_csv(file_path)
+
+
+output_path = "output.csv"
+util.load_data_to_csv(df, output_path)
+
+
+missing_values = util.check_missing_values(df)
+print("Missing Values:")
+print(missing_values)
+
+duplicates = util.check_duplicates(df)
+print("Duplicate Rows:")
+print(duplicates)
+
+
+data_types = util.get_column_data_types(df)
+print("Column Data Types:")
+print(data_types)
 print("Processed DataFrame:")
 print(df)
